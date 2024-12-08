@@ -5,24 +5,22 @@ import (
 	"strings"
 )
 
-func EnforceHTTP(url String) string {
-	if url[:4] != http {
+func EnforceHTTP(url string) string {
+	if len(url) < 4 || url[:4] != "http" {
 		return "http://" + url
 	}
 	return url
 }
 
-func RemoveDomainError(url String) bool {
-	if url == osGetenv("DOMAIN") {
+func RemoveDomainError(url string) bool {
+	if url == os.Getenv("DOMAIN") {
 		return false
 	}
-	// running checks and removing prefixes
+
 	newURL := strings.Replace(url, "http://", "", 1)
 	newURL = strings.Replace(newURL, "https://", "", 1)
 	newURL = strings.Replace(newURL, "www.", "", 1)
 	newURL = strings.Split(newURL, "/")[0]
 
-	if newURL == os.Getenv("DOMAIN") {
-		return false
-	}
+	return newURL != os.Getenv("DOMAIN")
 }
